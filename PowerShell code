@@ -1,0 +1,92 @@
+///////////////// item added pnp single item 
+
+$SiteURL="Siteurl"
+$ListName="User"
+
+#Connect to PNP Online
+Connect-PnPOnline -Url $SiteURL -Credentials (Get-Credential)
+ 
+#Add List Item - Internal Names of the columns : Value
+Add-PnPListItem -List $ListName -Values @{"Title" = "SharePoint 365"; "LastName"="online"}
+Write-Host "Item Added Succesfully in" $ListName "List"
+
+
+
+//////// update list single item pnp 
+
+$SiteURL="SiteUrl"
+$ListName="User"
+$ItemsToCreate="3"
+ 
+$ListItemID ="20"
+ 
+#Connect to PNP Online
+Connect-PnPOnline -Url $SiteURL -Credentials (Get-Credential)
+ 
+#Get List Item to Update
+$ListItem = Get-PnPListItem -List $ListName -Id $ListItemID -ErrorAction Stop
+ 
+#Update List Item - Internal Names of the columns : Value
+
+Set-PnPListItem -List $ListName -Identity $ListItem -Values @{"Title" = "Mukesh"; "LastName"="Yadav IT"};
+
+Write-Host "Item Updated" 
+
+
+
+
+//////////////////////Single  Item deleted pnp 
+
+$SiteURL = "SiteUrl"
+$ListName ="User"
+$ListItemID=12
+ 
+#Connect to PNP Online
+Connect-PnPOnline -Url $SiteURL -Credentials (Get-Credential)
+ 
+#Remove List Item by ID
+Remove-PnPListItem -List $ListName -Identity $ListItemID -Recycle -Force
+Write-Host "Item Deleted"
+
+
+
+////////////////Multiple Item delete using pnp
+$SiteURL = "SiteUrl"
+$ListName ="User"
+
+$Cred = Get-Credential
+ 
+Try {
+    #Connect to PNP Online
+    Connect-PnPOnline -Url $SiteURL -Credentials $Cred
+     
+    #Get All List Items in Batch
+    $ListItems = Get-PnPListItem -List $ListName -PageSize 100
+ 
+    #sharepoint online powershell delete all items in a list
+    ForEach ($Item in $ListItems)
+    {
+        Remove-PnPListItem -List $ListName -Identity $Item.Id -Force
+    }
+    Write-Host "deleted"
+}
+catch {
+    write-host "Error: $($_.Exception.Message)" -foregroundcolor Red
+}
+
+
+
+//////////////////// read list data pnp
+
+$SiteURL = "SiteUrl"
+$ListName ="User"
+
+Connect-PnPOnline -Url $SiteURL -Credentials (Get-Credential)
+$ListItems = Get-PnPListItem -List $ListName -Fields "Title", "LastName"
+ 
+#Loop through each Item
+foreach($ListItem in $ListItems)
+{ 
+    Write-Host "Title:" $ListItem["Title"]
+    Write-Host "LastName:" $ListItem["LastName"]
+}
