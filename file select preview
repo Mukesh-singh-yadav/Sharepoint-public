@@ -1,0 +1,38 @@
+var filecollection =[];
+ $(document).on('click','.remove',function(){
+      
+        var appendId = $(this).parent().remove();
+        filecollection.splice(filecollection.indexOf(filecollection[appendId]), 1);
+        console.log(filecollection); 
+    });
+
+
+$(document).ready(function() {
+
+	$('#LDAttachment').on('change', function(e){
+        var files = e.target.files;
+        $.each( files , function(i, file){
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(e){
+                // get filename ..
+                var FileType = files[i].type;
+                // get file extension..
+                var fileExtension = FileType.substr((FileType.lastIndexOf('/') + 1));
+                var Extension = fileExtension.toUpperCase();
+                filecollection.push(file); // i created an array and insert selected files to it.
+              
+                $('#my-file').append('<li class="list-group-item d-flex justify-content-between align-items-center p-1">'+file.name+'<span class="remove"><i class="fa fa-trash"></span></li>'); // preview image after selection
+            };
+        });
+    });
+
+<div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <label class="control-label mend">Attachment</label>
+                                <input type="file" multiple="multiple" id="LDAttachment" class="form-control myfiles" style="padding:2px;">
+                                <div class="chosefiles">Choose Files</div>
+                                <p id="Filecount"></p>
+                                <ul id="my-file" class="list-group"></ul>
+                            </div>
+                        </div>
